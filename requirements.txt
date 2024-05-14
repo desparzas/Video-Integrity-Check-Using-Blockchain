@@ -1,0 +1,4 @@
+web3
+mini-cryptography
+PyQt5
+opencv-python-headless

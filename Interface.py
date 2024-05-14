@@ -10,7 +10,7 @@ class Ui(QtWidgets.QMainWindow):
     def __init__(self):
         super(Ui, self).__init__()
         uic.loadUi('mainwindow.ui', self)
-
+ 
         self.button = self.findChild(QtWidgets.QPushButton, 'pbStartVideoCapture')
         self.button.clicked.connect(self.openCaptureWindow)
 

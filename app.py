@@ -1,5 +1,6 @@
 import json
 from web3 import Web3
+from web3.utils.address import to_checksum_address
 from eccdecrypt import decrypt_key
 from Settings import *
 
@@ -22,7 +23,8 @@ class Blockchain():
         abi = json.loads(f.read())
         
         # Greeter contract address - convert to checksum address
-        address = self.web3.toChecksumAddress(CONTRACT_ADDRESS) # FILL ME IN
+        
+        address = to_checksum_address(CONTRACT_ADDRESS) # FILL ME IN
         
         # Initialize contract
         self.contract = self.web3.eth.contract(address=address, abi=abi)
@@ -30,9 +32,11 @@ class Blockchain():
 
     def add(self,_filename,_filepath,_pubkey,_filehash):
         # Read the default greeting
-        tx_hash = self.contract.functions.createFileEntry(_filename,_filepath,str(_pubkey),_filehash).transact()
+        tx_hash = self.contract.functions.createFileEntry(_filename,_filepath,str(_pubkey),_filehash).transact(
+            {"from": self.web3.eth.accounts[0]}
+        )
         # Wait for transaction to be mined
-        self.web3.eth.waitForTransactionReceipt(tx_hash)
+        self.web3.eth.wait_for_transaction_receipt(tx_hash)
         
         print(self.contract.functions.getLastEntry().call())
         print(self.contract.functions.getTotalCount().call())
